@@ -25,8 +25,9 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        pip install -r requirements.txt
-        python setup.py develop
+        python -m pip install --upgrade "pip>=25.3" "setuptools<81" wheel
+        python -m pip install --build-constraint .github/ci-build-constraints.txt -r requirements.txt
+        python -m pip install --build-constraint .github/ci-build-constraints.txt -e .
 
         # Install FFmpeg
         sudo apt-get -y update
@@ -65,9 +66,12 @@ jobs:
     timeout-minutes: 30
     steps:
     - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '20'
     - uses: pnpm/action-setup@v2
       with:
-        version: '7.27.0'
+        version: '7.33.7'
 
     - name: Install Modules
       run: |
